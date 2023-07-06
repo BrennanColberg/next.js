@@ -333,17 +333,23 @@ export class ClientReferenceManifestPlugin {
       // A page's entry name can have extensions. For example, these are both valid:
       // - app/foo/page
       // - app/foo/page.page
-      // - app/not-found
       // Let's normalize the entry name to remove the extra extension
-      const groupName =
-        /\/page(\.[^/]+)?$/.test(entryName) || entryName === 'app/not-found'
-          ? entryName.replace(/\/page(\.[^/]+)?$/, '/page')
-          : entryName.slice(0, entryName.lastIndexOf('/'))
+      const groupName = /\/page(\.[^/]+)?$/.test(entryName)
+        ? entryName.replace(/\/page(\.[^/]+)?$/, '/page')
+        : entryName.slice(0, entryName.lastIndexOf('/'))
 
       if (!manifestsPerGroup.has(groupName)) {
         manifestsPerGroup.set(groupName, [])
       }
       manifestsPerGroup.get(groupName)!.push(manifest)
+
+      // Special case for the root not-found page.
+      if (/^app\/not-found(\.[^.]+)?$/.test(entryName)) {
+        if (!manifestsPerGroup.has('app')) {
+          manifestsPerGroup.set('app', [])
+        }
+        manifestsPerGroup.get('app')!.push(manifest)
+      }
     })
 
     // Generate per-page manifests.
