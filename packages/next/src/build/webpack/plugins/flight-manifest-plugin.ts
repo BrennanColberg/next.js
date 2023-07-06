@@ -345,10 +345,10 @@ export class ClientReferenceManifestPlugin {
 
       // Special case for the root not-found page.
       if (/^app\/not-found(\.[^.]+)?$/.test(entryName)) {
-        if (!manifestsPerGroup.has('app')) {
-          manifestsPerGroup.set('app', [])
+        if (!manifestsPerGroup.has('app/not-found')) {
+          manifestsPerGroup.set('app/not-found', [])
         }
-        manifestsPerGroup.get('app')!.push(manifest)
+        manifestsPerGroup.get('app/not-found')!.push(manifest)
       }
     })
 
