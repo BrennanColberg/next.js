@@ -347,10 +347,7 @@ export class ClientReferenceManifestPlugin {
         // Remove parallel route labels:
         // - app/foo/@bar/page -> app/foo
         // - app/foo/@bar/layout -> app/foo/layout -> app/foo
-        const entryNameWithoutNamedSegments = entryName.replace(
-          /\/@[^/]+\//g,
-          ''
-        )
+        const entryNameWithoutNamedSegments = entryName.replace(/\/@[^/]+/g, '')
         const groupNameWithoutNamedSegments =
           entryNameWithoutNamedSegments.slice(
             0,
@@ -384,6 +381,7 @@ export class ClientReferenceManifestPlugin {
         const segments = groupName.split('/')
         let group = ''
         for (const segment of segments) {
+          if (segment.startsWith('@')) continue
           for (const manifest of manifestsPerGroup.get(group) || []) {
             mergeManifest(mergedManifest, manifest)
           }
