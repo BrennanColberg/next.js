@@ -393,15 +393,15 @@ export class ClientReferenceManifestPlugin {
 
         const json = JSON.stringify(mergedManifest)
 
-        assets[
-          'server/' + groupName + '_' + CLIENT_REFERENCE_MANIFEST + '.js'
-        ] = new sources.RawSource(
-          `globalThis.__RSC_MANIFEST=(globalThis.__RSC_MANIFEST||{});globalThis.__RSC_MANIFEST[${JSON.stringify(
-            groupName.slice('app'.length)
-          )}]=${JSON.stringify(json)}`
-        ) as unknown as webpack.sources.RawSource
+        const pagePath = groupName.replace(/%5F/g, '_')
+        assets['server/' + pagePath + '_' + CLIENT_REFERENCE_MANIFEST + '.js'] =
+          new sources.RawSource(
+            `globalThis.__RSC_MANIFEST=(globalThis.__RSC_MANIFEST||{});globalThis.__RSC_MANIFEST[${JSON.stringify(
+              pagePath.slice('app'.length)
+            )}]=${JSON.stringify(json)}`
+          ) as unknown as webpack.sources.RawSource
 
-        if (groupName === 'app/not-found') {
+        if (pagePath === 'app/not-found') {
           // Create a separate special manifest for the root not-found page.
           assets[
             'server/' +
