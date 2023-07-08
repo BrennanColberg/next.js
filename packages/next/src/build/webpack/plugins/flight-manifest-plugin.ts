@@ -343,6 +343,25 @@ export class ClientReferenceManifestPlugin {
       }
       manifestsPerGroup.get(groupName)!.push(manifest)
 
+      if (entryName.includes('/@')) {
+        // Remove parallel route labels:
+        // - app/foo/@bar/page -> app/foo
+        // - app/foo/@bar/layout -> app/foo/layout -> app/foo
+        const entryNameWithoutNamedSegments = entryName.replace(
+          /\/@[^/]+\//g,
+          ''
+        )
+        const groupNameWithoutNamedSegments =
+          entryNameWithoutNamedSegments.slice(
+            0,
+            entryNameWithoutNamedSegments.lastIndexOf('/')
+          )
+        if (!manifestsPerGroup.has(groupNameWithoutNamedSegments)) {
+          manifestsPerGroup.set(groupNameWithoutNamedSegments, [])
+        }
+        manifestsPerGroup.get(groupNameWithoutNamedSegments)!.push(manifest)
+      }
+
       // Special case for the root not-found page.
       if (/^app\/not-found(\.[^.]+)?$/.test(entryName)) {
         if (!manifestsPerGroup.has('app/not-found')) {
