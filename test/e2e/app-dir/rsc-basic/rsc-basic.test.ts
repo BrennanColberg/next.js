@@ -568,7 +568,7 @@ createNextDescribe(
       it('should generate client reference manifest for edge SSR pages', async () => {
         const buildManifest = JSON.parse(
           await next.readFile('.next/app-build-manifest.json')
-        ).files
+        )
 
         expect(buildManifest.pages['/edge/dynamic/page']).toInclude(
           'server/app/edge/dynamic/page_client-reference-manifest.js'
